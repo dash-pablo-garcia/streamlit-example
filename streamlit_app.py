@@ -1,38 +1,76 @@
-from collections import namedtuple
-import altair as alt
-import math
+
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
+import seaborn as sns
+from adjustText import adjust_text
+from constants import (
+    COLUMN_COUNT,
+    COLUMN_LETTER_DIMENSION_1, 
+    COLUMN_LETTER_DIMENSION_2,
+    COLUMN_CLUSTER,
+    COLUMN_TOKEN,
+    OUTPUT_LOCATION
+)
 
-"""
-# Welcome to Streamlit!
-
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
-
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
-
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
 
 
-with st.echo(code_location='below'):
-    total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-    num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
+def create_app(country):
+    st.title('Brand Discoveries App')
 
-    Point = namedtuple('Point', 'x y')
-    data = []
 
-    points_per_turn = total_points / num_turns
+    # Create a text element and let the reader know the data is loading.
+    data_load_state = st.text('Loading data...')
 
-    for curr_point_num in range(total_points):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
+    data = pd.read_csv(OUTPUT_LOCATION.format(country))
 
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
+    df = data.drop([COLUMN_LETTER_DIMENSION_1,COLUMN_LETTER_DIMENSION_2], axis=1)  
+    
+    # convert df to csv
+    csv = df.to_csv().encode('utf-8')
+
+    data_load_state.text('Loading data...done!')
+    # create header in streamlit
+    st.header('Extracted Tokens Dataset')
+
+    st.dataframe(df)
+    st.download_button(label="Download dataset as CSV file", data=csv, file_name=f'brand_discovery_{country}.csv')
+
+    #map_character_simmilarities(data)
+
+
+    
+
+def map_character_simmilarities(df):
+
+    
+    st.header('Brand Groups')
+    
+    cluster_size = st.slider("Select size of Brand Clusters", min_value=1,max_value=10, value=(7,10),step=1)
+    
+    vc = df[COLUMN_CLUSTER].value_counts()
+    df = df[df[COLUMN_CLUSTER].isin(vc[(vc >= cluster_size[0])&(vc <= cluster_size[1])].index)]
+    
+    fig = plt.figure(figsize=(25, 15))
+
+    sns.scatterplot(data=df, x=COLUMN_LETTER_DIMENSION_1, y=COLUMN_LETTER_DIMENSION_2,hue=COLUMN_COUNT, palette="viridis")
+
+    texts = []
+    
+    def label_point(x, y, val, ax):
+        a = pd.concat({'x': x, 'y': y, 'val': val}, axis=1)
+        for i, point in a.iterrows():
+            texts.append(ax.text(point['x']+.02, point['y'], str(point['val']), fontsize=9))
+
+    label_point(df[COLUMN_LETTER_DIMENSION_1], df[COLUMN_LETTER_DIMENSION_2], df[COLUMN_TOKEN], plt.gca())
+    adjust_text(texts, only_move={'points':'y', 'texts':'y'}, arrowprops=dict(arrowstyle="->", color='r', lw=0.5))
+    
+    st.pyplot(fig)
+    st.balloons()
+
+
+
+if __name__ == "__main__":
+    create_app("NZ")
+
+
