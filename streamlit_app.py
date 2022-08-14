@@ -10,7 +10,8 @@ from constants import (
     COLUMN_LETTER_DIMENSION_2,
     COLUMN_CLUSTER,
     COLUMN_TOKEN,
-    OUTPUT_LOCATION
+    OUTPUT_LOCATION,
+    COLUMN_CASS_BRAND
 )
 
 
@@ -38,8 +39,17 @@ def create_app(country):
 
     map_character_simmilarities(data)
 
-
+def create_selection_box(df):
     
+    cluster = df[COLUMN_CLUSTER].drop_duplicates()
+    cass_brand = df[COLUMN_CASS_BRAND]
+    
+    
+    cluster_choice = st.sidebar.selectbox('', cluster)
+    cass_brand_choice = st.sidebar.selectbox('', cass_brand)
+
+    st.write('Results:', cluster_choice)
+    st.write('Results:', cass_brand_choice)
 
 def map_character_simmilarities(df):
 
