@@ -36,7 +36,7 @@ def create_app(country):
     st.dataframe(df)
     st.download_button(label="Download dataset as CSV file", data=csv, file_name=f'brand_discovery_{country}.csv')
 
-    #map_character_simmilarities(data)
+    map_character_simmilarities(data)
 
 
     
