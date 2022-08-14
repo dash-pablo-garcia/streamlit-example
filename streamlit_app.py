@@ -27,6 +27,7 @@ def create_app(country):
 
     df = data.drop([COLUMN_LETTER_DIMENSION_1,COLUMN_LETTER_DIMENSION_2], axis=1)  
     
+    #create_selection_box(df)
     # convert df to csv
     csv = df.to_csv().encode('utf-8')
 
