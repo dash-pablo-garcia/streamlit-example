@@ -11,14 +11,20 @@ from constants import (
     COLUMN_CLUSTER,
     COLUMN_TOKEN,
     OUTPUT_LOCATION,
-    COLUMN_CASS_BRAND
+    COLUMN_CASS_BRAND,
+    COUNTRY_OFFERING
 )
 
 
 
-def create_app(country):
+def create_app():
     st.title('Brand Discoveries App')
+    
+    country = st.selectbox(
+     'Select country data',
+     (COUNTRY_OFFERING))
 
+    st.write('You selected:', country)
 
     # Create a text element and let the reader know the data is loading.
     data_load_state = st.text('Loading data...')
