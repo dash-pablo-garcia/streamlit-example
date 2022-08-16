@@ -4,6 +4,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 from adjustText import adjust_text
+
 from constants import (
     COLUMN_COUNT,
     COLUMN_LETTER_DIMENSION_1, 
