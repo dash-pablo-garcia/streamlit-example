@@ -7,4 +7,4 @@ COLUMN_CASS_BRAND = "cass_brand"
 
 OUTPUT_LOCATION = "assets/{}/output.csv"
 
-COUNTRY_OUTPUT = ["AU", "NZ"]
+COUNTRY_OFFERING = ["AU", "NZ"]

@@ -24,8 +24,6 @@ def create_app():
      'Select country data',
      (COUNTRY_OFFERING))
 
-    st.write('You selected:', country)
-
     # Create a text element and let the reader know the data is loading.
     data_load_state = st.text('Loading data...')
 
@@ -63,7 +61,7 @@ def map_character_simmilarities(df):
     
     st.header('Brand Groups')
     
-    cluster_size = st.slider("Select size of Brand Clusters", min_value=1,max_value=10, value=(7,10),step=1)
+    cluster_size = st.slider("Select size of Brand Clusters", min_value=2,max_value=10, value=(7,10),step=1)
     
     vc = df[COLUMN_CLUSTER].value_counts()
     df = df[df[COLUMN_CLUSTER].isin(vc[(vc >= cluster_size[0])&(vc <= cluster_size[1])].index)]
@@ -88,6 +86,6 @@ def map_character_simmilarities(df):
 
 
 if __name__ == "__main__":
-    create_app("NZ")
+    create_app()
 
 
