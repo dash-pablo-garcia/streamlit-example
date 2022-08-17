@@ -4,6 +4,8 @@ COLUMN_LETTER_DIMENSION_2 = "character_dimension_2"
 COLUMN_CLUSTER = "cluster"
 COLUMN_TOKEN = "token"
 COLUMN_CASS_BRAND = "cass_brand"
+COLUMN_LABEL = "label"
+COLUMN_PROBABILITY = "probability"
 
 OUTPUT_LOCATION = "assets/{}/output.csv"
 

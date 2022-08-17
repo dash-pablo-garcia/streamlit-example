@@ -11,9 +11,11 @@ from constants import (
     COLUMN_LETTER_DIMENSION_2,
     COLUMN_CLUSTER,
     COLUMN_TOKEN,
-    OUTPUT_LOCATION,
+    OUTPUT_LOCATION,    
     COLUMN_CASS_BRAND,
-    COUNTRY_OFFERING
+    COUNTRY_OFFERING,
+    COLUMN_LABEL,
+    COLUMN_PROBABILITY
 )
 
 
@@ -45,17 +47,8 @@ def create_app():
 
     map_character_simmilarities(data)
 
-def create_selection_box(df):
-    
-    cluster = df[COLUMN_CLUSTER].drop_duplicates()
-    cass_brand = df[COLUMN_CASS_BRAND]
-    
-    
-    cluster_choice = st.sidebar.selectbox('', cluster)
-    cass_brand_choice = st.sidebar.selectbox('', cass_brand)
 
-    st.write('Results:', cluster_choice)
-    st.write('Results:', cass_brand_choice)
+
 
 def map_character_simmilarities(df):
 
@@ -69,7 +62,7 @@ def map_character_simmilarities(df):
     
     fig = plt.figure(figsize=(25, 15))
 
-    sns.scatterplot(data=df, x=COLUMN_LETTER_DIMENSION_1, y=COLUMN_LETTER_DIMENSION_2,hue=COLUMN_COUNT, palette="viridis")
+    sns.scatterplot(data=df, x=COLUMN_LETTER_DIMENSION_1, y=COLUMN_LETTER_DIMENSION_2,hue=COLUMN_LABEL, size=COLUMN_COUNT, palette="viridis")
 
     texts = []
     
