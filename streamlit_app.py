@@ -45,8 +45,38 @@ def create_app():
     st.dataframe(df)
     st.download_button(label="Download dataset as CSV file", data=csv, file_name=f'brand_discovery_{country}.csv')
 
-    map_character_simmilarities(data)
+    if set(COLUMN_LABEL).issubset(data.columns):
+        map_character_simmilarities(data)
 
+    else:
+        map_character_simmilarities_no_label(data)
+
+def map_character_simmilarities_no_label(df):
+
+    
+    st.header('Brand Groups')
+    
+    cluster_size = st.slider("Select size of Brand Clusters", min_value=2,max_value=10, value=(7,10),step=1)
+    
+    vc = df[COLUMN_CLUSTER].value_counts()
+    df = df[df[COLUMN_CLUSTER].isin(vc[(vc >= cluster_size[0])&(vc <= cluster_size[1])].index)]
+    
+    fig = plt.figure(figsize=(25, 15))
+
+    sns.scatterplot(data=df, x=COLUMN_LETTER_DIMENSION_1, y=COLUMN_LETTER_DIMENSION_2,hue=COLUMN_COUNT,  palette="viridis")
+
+    texts = []
+    
+    def label_point(x, y, val, ax):
+        a = pd.concat({'x': x, 'y': y, 'val': val}, axis=1)
+        for i, point in a.iterrows():
+            texts.append(ax.text(point['x']+.02, point['y'], str(point['val']), fontsize=9))
+
+    label_point(df[COLUMN_LETTER_DIMENSION_1], df[COLUMN_LETTER_DIMENSION_2], df[COLUMN_TOKEN], plt.gca())
+    adjust_text(texts, only_move={'points':'y', 'texts':'y'}, arrowprops=dict(arrowstyle="->", color='r', lw=0.5))
+    
+    st.pyplot(fig)
+    st.balloons()
 
 
 

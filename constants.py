@@ -9,4 +9,4 @@ COLUMN_PROBABILITY = "probability"
 
 OUTPUT_LOCATION = "assets/{}/output.csv"
 
-COUNTRY_OFFERING = ["AU", "NZ"]
+COUNTRY_OFFERING = ["AU", "NZ", "CA"]
